@@ -1,17 +1,32 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"net/http"
+
+	"github.com/zollidan/sofascore/client"
+	"github.com/zollidan/sofascore/excel"
+	"github.com/zollidan/sofascore/utils"
 )
 
+// ============ MAIN ============
+
 func main() {
-	resp, err := http.Get("https://google.com")
+	date, err := utils.GetUserDateChoice()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("❌ Ошибка: %v\n", err)
 		return
 	}
-	defer resp.Body.Close()
 
-	fmt.Println("Response Status:", resp.Status)
+	client := client.NewAPIClient()
+	games, err := client.FetchGames(date)
+	if err != nil {
+		fmt.Printf("❌ Ошибка загрузки: %v\n", err)
+		return
+	}
+
+	jsonData, _ := json.Marshal(games)
+	fmt.Printf("Размер данных: %d байт (%.2f KB)\n", len(jsonData), float64(len(jsonData))/1024)
+
+	excel.SaveExcel(games)
 }
