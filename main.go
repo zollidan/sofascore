@@ -26,7 +26,7 @@ func main() {
 	}
 
 	jsonData, _ := json.Marshal(games)
-	fmt.Printf("Размер данных: %d байт (%.2f KB)\n", len(jsonData), float64(len(jsonData))/1024)
+	fmt.Printf("\nРазмер данных: %d байт (%.2f KB)\n", len(jsonData), float64(len(jsonData))/1024)
 
 	excel.SaveExcel(games)
 }
